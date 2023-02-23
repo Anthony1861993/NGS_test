@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'calls/style.css' %}" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <!-- This is the top navigation bar, only used for display in this assignment -->
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="{% static 'calls/images/logo.jpg' %}" alt="Logo" style="width:120px;">
+            </a>
+        </div>
+    </nav>
+
+    <!-- This is the filter table -->
+    <div class="container border rounded" style="margin-top: 140px">
+        <!--
+        <div class=" filter-header">
+            <h3>Filter table</h3>
+        </div>
+        -->
+
+        <div class="filter-body">
+
+            <form id="myForm" action="{% url 'calls:index' %}" method="get">
+
+                <!-- Tu Ngay va Den Ngay -->
+                <div class="row">
+                    <div class="col">
+                        <label for="tuNgay" class="form-label"><b>Từ Ngày:</b></label>
+                        <input type="datetime-local" class="form-control" id="tuNgay" name="myFrom">
+                    </div>
+                    <div class="col">
+                        <label for="denNgay" class="form-label"><b>Đến Ngày:</b></label>
+                        <input type="datetime-local" class="form-control" id="denNgay" name="myTo">
+                    </div>
+                </div>
+
+                <!-- Nguoi Goi va Nguoi Nhan -->
+                <div class="row">
+                    <div class="col">
+                        <label for="NguoiGoi" class="form-label"><b>Người Gọi:</b></label>
+                        <input type="text" class="form-control" id="NguoiGoi" name="myNguoiGoi">
+                    </div>
+                    <div class="col">
+                        <label for="NguoiNhan" class="form-label"><b>Người Nhận:</b></label>
+                        <input type="text" class="form-control" id="NguoiNhan" name="myNguoiNhan">
+                    </div>
+                </div>
+
+                <!-- Trang Thai va Chieu Goi -->
+                <div class="row">
+                    <div class="col">
+                        <label for="TrangThai" class="form-label"><b>Trạng Thái:</b></label>
+                        <select class="form-select" id="TrangThai" name="myTrangThai">
+                            <option id="TatCaTrangThai">Tat Ca</option>
+                            <option id="TraLoi">Tra Loi</option>
+                            <option id="KhongTraLoi">Khong Tra Loi</option>
+                            <option id="AgentTatMay">Agent Tat May</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label for="ChieuGoi" class="form-label"><b>Chiều Gọi:</b></label>
+                        <select class="form-select" id="ChieuGoi" name="myChieuGoi">
+                            <option id="TatCaChieuGoi">Tat Ca</option>
+                            <option id="GoiRa">Goi Ra</option>
+                            <option id="GoiVao">Goi Vao</option>
+                            <option id="GoiNoiBo">Goi Noi Bo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Thoi Gian Do Chuong va Thoi Gian Dam Thoai -->
+                <div class="row">
+                    <div class="col">
+                        <label class="form-label"><b>Thời Gian Đổ Chuông:</b></label>
+                    </div>
+                    <div class="col">
+                        <label class="form-label"><b>Thời Gian Đàm Thoại:</b></label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="input-group mb-3 mt-1">
+                            <span class="input-group-text">Từ</span>
+                            <input type="number" min="0" max="24" class="form-control" placeholder="giờ" name="myDoChuongTuGio" id="DoChuong1">
+                            <input type="number" min="0" max="60" class="form-control" placeholder="phút" name="myDoChuongTuPhut" id="DoChuong2">
+                            <input type="number" min="0" max="60" class="form-control" placeholder="giây" name="myDoChuongTuGiay" id="DoChuong3">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="input-group mb-3 mt-1">
+                            <span class="input-group-text">Đến</span>
+                            <input type="number" min="0" max="24" class="form-control" placeholder="giờ" name="myDoChuongDenGio" id="DoChuong4">
+                            <input type="number" min="0" max="60" class="form-control" placeholder="phút" name="myDoChuongDenPhut" id="DoChuong5">
+                            <input type="number" min="0" max="60" class="form-control" placeholder="giây" name="myDoChuongDenGiay" id="DoChuong6">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="input-group mb-3 mt-1">
+                            <span class="input-group-text">Từ</span>
+                            <input type="number" min="0" max="24" class="form-control" placeholder="giờ" name="myDamThoaiTuGio" id="DamThoai1">
+                            <input type="number" min="0" max="60" class="form-control" placeholder="phút" name="myDamThoaiTuPhut" id="DamThoai2">
+                            <input type="number" min="0" max="60" class="form-control" placeholder="giây" name="myDamThoaiTuGiay" id="DamThoai3">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="input-group mb-3 mt-1">
+                            <span class="input-group-text">Đến</span>
+                            <input type="number" min="0" max="24" class="form-control" placeholder="giờ" name="myDamThoaiDenGio" id="DamThoai4">
+                            <input type="number" min="0" max="60" class="form-control" placeholder="phút" name="myDamThoaiDenPhut" id="DamThoai5">
+                            <input type="number" min="0" max="60" class="form-control" placeholder="giây" name="myDamThoaiDenGiay" id="DamThoai6">
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Filter and Export buttons -->
+                <div class = "myDiv mb-3">
+                    <button type="submit" class="btn btn-dark mt-2">Filter</button>
+
+                </div>
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- This is the tab bar -->
+    <div class="container mt-3">
+        <!--<h2>Filter Result</h2><br>-->
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#home">Summary</a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#menu1">Raw Data</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div id="home" class="container tab-pane active"><br>
+                <h3>Data Summary</h3>
+
+                <!-- TrangThai Graph -->
+                <div class="row">
+                    <canvas id="myChart1" style="width:100%; max-width:700px"></canvas>
+                </div>
+
+                <!-- ChieuGoi Graph -->
+                <div class="row">
+                     <canvas id="myChart2" style="width:100%; max-width:700px"></canvas>
+                </div>
+
+            </div>
+            <div id="menu1" class="container tab-pane fade"><br>
+                <div class="container mt-3">
+
+                    <h3>Data Table</h3>
+                    <button class="btn btn-dark mt-2" onclick="exportData()">Export Data</button>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover" id="myTable">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Mã Cuộc Gọi</th>
+                                <th>Thời Gian</th>
+                                <th>Người Gọi</th>
+                                <th>Người Nhận</th>
+                                <th>Trạng Thái</th>
+                                <th>Đổ Chuông</th>
+                                <th>Đàm Thoại</th>
+                                <th>Chiều Gọi</th>
+                                <th>Record</th>
+                                <th>Ngắt Máy</th>
+                            </tr>
+                            </thead>
+                            <tbody id="myTbody">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript codes -->
+    <script>
+
+        // Fill the raw data table with data retrieved from user input
+        myTbody = document.getElementById("myTbody");
+		{% for i in callList %}
+			var myTuple = document.createElement('tr');
+			myTuple.innerHTML =
+					'<td>' + {{i.id}} + '</td>'
+					+ '<td>' + {{i.MaCuocGoi}} + '</td>'
+					+ '<td>' + "{{i.ThoiGian.isoformat}}" + '</td>'
+					+ '<td>' + "{{i.NguoiGoi}}" + '</td>'
+					+ '<td>' + "{{i.NguoiNhan}}" + '</td>'
+					+ '<td>' + "{{i.TrangThai}}" + '</td>'
+					+ '<td>' + "{{i.DoChuong.isoformat}}" + '</td>'
+					+ '<td>' + "{{i.DamThoai.isoformat}}" + '</td>'
+					+ '<td>' + "{{i.ChieuGoi}}" + '</td>'
+					+ '<td>' + "{{i.Record}}" + '</td>'
+					+ '<td>' + "{{i.NgatMay}}" + '</td>';
+			myTbody.appendChild(myTuple);
+		{% endfor %}
+
+        // This is the function to export data in Excel format
+        // Courtesy of https://www.revisitclass.com/css/how-to-export-download-the-html-table-to-excel-using-javascript/
+		function exportData() {
+            var myTable = document.getElementById("myTable");
+            var rows =[];
+            for (var i = 0; i < myTable.rows.length; i++) {
+                rows.push([ myTable.rows[i].cells[1].innerText,
+                            myTable.rows[i].cells[2].innerText,
+                            myTable.rows[i].cells[3].innerText,
+                            myTable.rows[i].cells[4].innerText,
+                            myTable.rows[i].cells[5].innerText,
+                            myTable.rows[i].cells[6].innerText,
+                            myTable.rows[i].cells[7].innerText,
+                            myTable.rows[i].cells[8].innerText,
+                            myTable.rows[i].cells[9].innerText,
+                            myTable.rows[i].cells[10].innerText]);
+            }
+            //console.log(rows);
+            csvContent = "data:text/csv;charset=utf-8,";
+            rows.forEach(function(rowArray) {
+                row = rowArray.join(",");
+                csvContent += row + "\r\n";
+            });
+            //console.log(csvContent);
+            var encodeUri = encodeURI(csvContent);
+            var link = document.createElement("a");
+            link.setAttribute("href", encodeUri);
+            link.setAttribute("download", "rawData.csv");
+            document.body.appendChild(link);
+            link.click();
+        }
+
+        // Retrieve default values for filter table from data from GET request
+        {% if myFrom %}
+            var myFromString = "{{myFrom}}";
+  			document.getElementById("tuNgay").value = myFromString;
+  		{% endif %}
+
+  		{% if myTo %}
+            var myToString = "{{myTo}}";
+  			document.getElementById("denNgay").value = myToString;
+  		{% endif %}
+
+        {% if myNguoiGoi %}
+  			document.getElementById("NguoiGoi").value = "{{myNguoiGoi}}";
+  		{% endif %}
+
+  		{% if myNguoiNhan %}
+  			document.getElementById("NguoiNhan").value = "{{myNguoiNhan}}";
+  		{% endif %}
+
+  		{% if myTrangThai %}
+  		    var myTrangThaiString = "{{myTrangThai}}";
+  		    if (myTrangThaiString == "Tra Loi") {
+  			    document.getElementById("TraLoi").selected = true;
+  			}
+  			else if (myTrangThaiString == "Khong Tra Loi") {
+  			    document.getElementById("KhongTraLoi").selected = true;
+  			}
+  			else if (myTrangThaiString == "Agent Tat May") {
+  			    document.getElementById("AgentTatMay").selected = true;
+  			}
+  		{% endif %}
+
+  		{% if myChieuGoi %}
+  		    var myChieuGoiString = "{{myChieuGoi}}";
+  		    if (myChieuGoiString == "Goi Ra") {
+  			    document.getElementById("GoiRa").selected = true;
+  			}
+  			else if (myChieuGoiString == "Goi Vao") {
+  			    document.getElementById("GoiVao").selected = true;
+  			}
+  			else if (myChieuGoiString == "Goi Noi Bo") {
+  			    document.getElementById("GoiNoiBo").selected = true;
+  			}
+  		{% endif %}
+
+        /*
+        // Do Chuong
+        {% if myDoChuong %}
+            document.getElementById("DoChuong1").value = {{myDoChuong.0}};
+            document.getElementById("DoChuong2").value = {{myDoChuong.1}};
+            document.getElementById("DoChuong3").value = {{myDoChuong.2}};
+            document.getElementById("DoChuong4").value = {{myDoChuong.3}};
+            document.getElementById("DoChuong5").value = {{myDoChuong.4}};
+            document.getElementById("DoChuong6").value = {{myDoChuong.5}};
+        {% endif %}
+
+        // Dam Thoai
+        {% if myDamThoai %}
+            document.getElementById("DamThoai1").value = {{myDamThoai.0}};
+            document.getElementById("DamThoai2").value = {{myDamThoai.1}};
+            document.getElementById("DamThoai3").value = {{myDamThoai.2}};
+            document.getElementById("DamThoai4").value = {{myDamThoai.3}};
+            document.getElementById("DamThoai5").value = {{myDamThoai.4}};
+            document.getElementById("DamThoai6").value = {{myDamThoai.5}};
+        {% endif %}
+        */
+
+        // Create charts
+        // Trang Thai chart
+        var xValues = [];
+        var yValues = [];
+        {% for i in trangThaiList %}
+			xValues.push("{{i.0}}");
+			yValues.push({{i.1}});
+		{% endfor %}
+        var barColors = ["red", "green", "blue"];
+        new Chart("myChart1", {
+            type: "bar",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    backgroundColor: barColors,
+                    data: yValues
+                }]
+            },
+            options: {
+                legend: {display: false},
+                title: {
+                    display: true,
+                    text: "Thong Ke Trang Thai Cuoc Goi"
+                }
+            }
+        });
+
+        // Chieu Goi chart
+        var xValues2 = [];
+        var yValues2 = [];
+        {% for i in chieuGoiList %}
+			xValues2.push("{{i.0}}");
+			yValues2.push({{i.1}});
+		{% endfor %}
+        new Chart("myChart2", {
+            type: "bar",
+            data: {
+                labels: xValues2,
+                datasets: [{
+                    backgroundColor: barColors,
+                    data: yValues2
+                }]
+            },
+            options: {
+                legend: {display: false},
+                title: {
+                    display: true,
+                    text: "Thong Ke Chieu Goi"
+                }
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>
+
+
+
